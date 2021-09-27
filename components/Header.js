@@ -10,11 +10,14 @@ import {
   UserCircleIcon,
   UserIcon,
 } from "@heroicons/react/solid";
-function Header() {
+import { useRouter } from "next/dist/client/router";
+
+function Header({ placeholder }) {
   const [searchInput, setSearchInput] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [guestNumber, setGuestNumber] = useState(1);
+  const router = useRouter();
 
   const selectionRange = {
     startDate: startDate,
@@ -30,10 +33,26 @@ function Header() {
   const resetInput = () => {
     setSearchInput("");
   };
+
+  const search = () => {
+    router.push({
+      pathname: "/search",
+      query: {
+        location: searchInput,
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+        guestNumber,
+      },
+    });
+  };
+
   return (
     <header className="sticky top-0 z-50 p-5 grid grid-cols-3 bg-white shadow-md  md:px-10">
       {/* Left side */}
-      <div className="relative flex items-center h-10 my-auto">
+      <div
+        onClick={() => router.push("/")}
+        className="relative flex items-center h-10 my-auto"
+      >
         <Image
           className="cursor-pointer"
           src="https://links.papareact.com/qd3"
@@ -48,7 +67,7 @@ function Header() {
           value={searchInput}
           className="bg-transparent pl-5 outline-none flex-grow text-sm text-gray-600 placeholder-gray-400"
           type="text"
-          placeholder="Start your Search"
+          placeholder={placeholder || "Start your Search"}
           onChange={(e) => setSearchInput(e.target.value)}
         />
         <SearchIcon className=" hidden md:inline-flex cursor-pointer h-8 bg-red-400 text-white rounded-full p-2 md:mx-2 " />
@@ -89,7 +108,9 @@ function Header() {
             <button onClick={resetInput} className="flex-grow text-gray-500">
               Cancel
             </button>
-            <button className="flex-grow text-red-400">Search</button>
+            <button onClick={search} className="flex-grow text-red-400">
+              Search
+            </button>
           </div>
         </div>
       )}
