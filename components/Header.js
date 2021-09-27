@@ -35,6 +35,7 @@ function Header({ placeholder }) {
   };
 
   const search = () => {
+    resetInput;
     router.push({
       pathname: "/search",
       query: {
